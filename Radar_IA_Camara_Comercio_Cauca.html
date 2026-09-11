@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radar IA · Oferta disponible para empresas</title>
+<style>
+  :root{
+    --navy:#1A2948;
+    --navy2:#223760;
+    --blue:#1F6FA8;
+    --blue-l:#4A9BD4;
+    --bg:#F4F7FA;
+    --card:#FFFFFF;
+    --tint:#E9F0F7;
+    --ink:#222B3A;
+    --muted:#6B7686;
+    --border:#DCE5EF;
+    --alta:#C0392B;
+    --media:#C77D14;
+    --baja:#1E8449;
+    --head-font: Cambria, Georgia, "Times New Roman", serif;
+    --body-font: Calibri, Arial, Helvetica, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--body-font);}
+  a{color:inherit;}
+  .app{min-height:100vh;display:flex;flex-direction:column;}
+
+  /* ---------- Header ---------- */
+  header.topbar{background:var(--navy);color:#fff;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  header.topbar .brand{display:flex;align-items:center;gap:16px;}
+  header.topbar .logo-box{background:#fff;border-radius:8px;padding:8px 14px;display:flex;align-items:center;justify-content:center;}
+  header.topbar img.logo{height:48px;max-width:210px;display:block;object-fit:contain;}
+  header.topbar .logo-upload-btn{background:rgba(255,255,255,.12);border:1px dashed rgba(255,255,255,.55);color:#fff;font-family:var(--body-font);font-size:11.5px;font-weight:600;padding:7px 12px;border-radius:6px;cursor:pointer;white-space:nowrap;}
+  header.topbar .logo-upload-btn:hover{background:rgba(255,255,255,.22);}
+  header.topbar .logo-change-btn{background:transparent;border:none;color:#AAB9CE;font-family:var(--body-font);font-size:10.5px;text-decoration:underline;cursor:pointer;padding:0;margin-left:4px;}
+  header.topbar .logo-change-btn:hover{color:#fff;}
+  header.topbar .brand-title{font-family:var(--head-font);font-weight:700;font-size:17px;line-height:1.2;}
+  header.topbar .brand-title small{display:block;font-family:var(--body-font);font-weight:400;font-size:11.5px;color:#AAB9CE;margin-top:2px;letter-spacing:.3px;}
+
+  nav.tabs{display:flex;gap:6px;background:var(--navy2);padding:0 26px;overflow-x:auto;}
+  nav.tabs button{appearance:none;border:none;background:transparent;color:#B9C6DA;font-family:var(--body-font);font-size:13.5px;font-weight:600;padding:14px 16px;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:.15s;}
+  nav.tabs button:hover{color:#fff;}
+  nav.tabs button.active{color:#fff;border-bottom-color:var(--blue-l);}
+
+  main{flex:1;max-width:1180px;margin:0 auto;padding:34px 28px 60px;width:100%;}
+  .view{display:none;}
+  .view.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+  .kicker{font-size:11.5px;font-weight:700;letter-spacing:1.6px;color:var(--blue);text-transform:uppercase;margin:0 0 6px;}
+  h1.page-title{font-family:var(--head-font);font-size:28px;font-weight:700;color:var(--ink);margin:0 0 8px;}
+  p.page-sub{color:var(--muted);font-size:14.5px;max-width:760px;line-height:1.5;margin:0 0 28px;}
+
+  /* ---------- Cards / generic ---------- */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;}
+  .grid{display:grid;gap:18px;}
+  .grid.cols-3{grid-template-columns:repeat(3,1fr);}
+  .grid.cols-4{grid-template-columns:repeat(4,1fr);}
+  @media(max-width:900px){.grid.cols-3,.grid.cols-4{grid-template-columns:1fr 1fr;}}
+  @media(max-width:600px){.grid.cols-3,.grid.cols-4{grid-template-columns:1fr;}}
+
+  .icon-circle{width:44px;height:44px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:12px;}
+  .icon-circle.blue{background:var(--blue);}
+
+  /* ---------- Home ---------- */
+  .home-hero{background:var(--navy);border-radius:14px;padding:40px 36px;color:#fff;position:relative;overflow:hidden;margin-bottom:26px;}
+  .home-hero::before{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:190px;background:var(--blue);opacity:.28;clip-path:polygon(50% 0,100% 100%,0 100%);}
+  .home-hero::after{content:"";position:absolute;right:60px;bottom:-70px;width:150px;height:130px;background:var(--blue-l);opacity:.22;clip-path:polygon(50% 0,100% 100%,0 100%);}
+  .home-hero h1{font-family:var(--head-font);font-size:30px;margin:6px 0 10px;position:relative;max-width:640px;}
+  .home-hero p{color:#BFD3E8;font-size:14.5px;max-width:560px;position:relative;line-height:1.55;}
+  .home-hero .tag{position:relative;font-size:11.5px;font-weight:700;letter-spacing:1.6px;color:var(--blue-l);text-transform:uppercase;}
+
+  .home-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:8px;}
+  @media(max-width:1100px){.home-cards{grid-template-columns:1fr 1fr 1fr;}}
+  @media(max-width:700px){.home-cards{grid-template-columns:1fr 1fr;}}
+  @media(max-width:480px){.home-cards{grid-template-columns:1fr;}}
+  .home-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;cursor:pointer;transition:.15s;}
+  .home-card:hover{box-shadow:0 10px 24px rgba(26,41,72,.12);transform:translateY(-2px);}
+  .home-card h3{font-family:var(--head-font);font-size:16px;margin:2px 0 6px;}
+  .home-card p{color:var(--muted);font-size:12.5px;line-height:1.4;margin:0;}
+  .home-card .go{font-size:12px;color:var(--blue);font-weight:700;margin-top:12px;display:inline-block;}
+
+  /* ---------- Buttons ---------- */
+  .btn{appearance:none;border:none;border-radius:8px;padding:10px 16px;font-family:var(--body-font);font-size:13px;font-weight:600;cursor:pointer;transition:.15s;}
+  .btn-primary{background:var(--navy);color:#fff;}
+  .btn-primary:hover{background:var(--navy2);}
+  .btn-outline{background:#fff;color:var(--navy);border:1px solid var(--border);}
+  .btn-outline:hover{border-color:var(--blue);color:var(--blue);}
+  .btn-sm{padding:6px 11px;font-size:12px;border-radius:6px;}
+  .toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+  .toolbar .actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+  /* ---------- Table (Matriz / Inventario) ---------- */
+  table.tool-table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;border:1px solid var(--border);}
+  table.tool-table th{background:var(--tint);color:var(--navy);font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;text-align:left;padding:10px 10px;font-weight:700;}
+  table.tool-table td{padding:8px 10px;border-top:1px solid var(--border);font-size:13px;vertical-align:middle;}
+  table.tool-table input[type=text], table.tool-table select, table.tool-table input[type=number]{width:100%;padding:7px 8px;border:1px solid var(--border);border-radius:6px;font-family:var(--body-font);font-size:12.5px;background:#fbfcfd;}
+  table.tool-table input[type=checkbox]{width:16px;height:16px;}
+  table.tool-table td.rowdel{text-align:center;width:36px;}
+  .del-btn{border:none;background:transparent;color:#B7C2D2;font-size:16px;cursor:pointer;}
+  .del-btn:hover{color:var(--alta);}
+
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;}
+  .badge-alta{background:var(--alta);}
+  .badge-media{background:var(--media);}
+  .badge-baja{background:var(--baja);}
+  .badge-neutral{background:#B7C2D2;color:#fff;}
+
+  .legend{display:flex;gap:22px;margin:14px 0 18px;flex-wrap:wrap;}
+  .legend span{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink);font-weight:600;}
+  .legend i{width:11px;height:11px;border-radius:50%;display:inline-block;}
+
+  .note{font-size:11.5px;color:var(--muted);font-style:italic;margin-top:12px;}
+
+  /* ---------- Radar IA ---------- */
+  .directory-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;}
+  .directory-card h3{font-size:14px;margin:10px 0 4px;font-family:var(--head-font);}
+  .directory-card p{font-size:11.5px;color:var(--muted);margin:0;line-height:1.4;}
+  .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  .chip{border:1px solid var(--border);background:#fff;padding:7px 13px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);}
+  .chip.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+  .prompt-card{background:var(--navy);color:#fff;border-radius:12px;padding:20px 22px;margin-bottom:16px;}
+  .prompt-card .ptitle{font-size:10.5px;font-weight:700;color:var(--blue-l);letter-spacing:1.5px;margin-bottom:8px;}
+  .prompt-card textarea{width:100%;background:transparent;border:none;color:#fff;font-family:var(--body-font);font-size:13.5px;font-style:italic;line-height:1.4;resize:vertical;min-height:52px;}
+  .prompt-card .prow{display:flex;justify-content:flex-end;margin-top:6px;}
+  .prompt-card .copy-btn{background:var(--blue);color:#fff;border:none;padding:6px 13px;border-radius:6px;font-size:11.5px;font-weight:700;cursor:pointer;}
+  .prompt-card .copy-btn:hover{background:var(--blue-l);}
+
+  .field-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+  @media(max-width:700px){.field-row{grid-template-columns:1fr;}}
+  .field-row label{display:block;font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;}
+  .field-row input{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:7px;font-family:var(--body-font);font-size:13px;}
+
+  .section-h{font-family:var(--head-font);font-size:16px;margin:26px 0 12px;color:var(--ink);}
+
+  .how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:14px 0 30px;}
+  @media(max-width:800px){.how-steps{grid-template-columns:1fr;}}
+  .how-step{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;}
+  .how-step .stepnum{width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;margin-bottom:10px;}
+  .how-step h3{font-size:14px;margin:0 0 6px;font-family:var(--head-font);}
+  .how-step p{font-size:12px;color:var(--muted);margin:0;line-height:1.45;}
+
+  .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0 30px;}
+  @media(max-width:700px){.cat-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:480px){.cat-grid{grid-template-columns:1fr;}}
+  .cat-chip{background:var(--tint);border-radius:8px;padding:10px 12px;font-size:12.5px;font-weight:600;color:var(--navy);}
+
+  .field-row-radar{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:22px;}
+  @media(max-width:700px){.field-row-radar{grid-template-columns:1fr;}}
+  .field-row-radar label{display:block;font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;}
+  .field-row-radar input,.field-row-radar select{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:7px;font-family:var(--body-font);font-size:13px;background:#fff;}
+
+  .ai-links{display:flex;gap:8px;flex-wrap:wrap;}
+
+  /* ---------- Footer ---------- */
+  footer.appfoot{background:var(--navy);color:#AAB9CE;padding:22px 32px;font-size:11.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  footer.appfoot .foot-brand{display:flex;align-items:center;gap:10px;}
+  footer.appfoot img{height:22px;max-width:160px;object-fit:contain;opacity:.9;}
+
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;box-shadow:0 8px 22px rgba(0,0,0,.25);z-index:50;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  @media(max-width:900px){.steps{grid-template-columns:1fr 1fr;}}
+  @media(max-width:600px){.steps{grid-template-columns:1fr;}}
+  .step-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;}
+  .step-num{width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--head-font);font-weight:700;font-size:15px;margin-bottom:12px;}
+  .step-card h4{font-size:14px;margin:0 0 6px;}
+  .step-card p{font-size:12px;color:var(--muted);margin:0;line-height:1.4;}
+
+  /* ---------- Modelo evolutivo — canvas fijo escalado a una sola vista ---------- */
+  /* "Full-bleed": el diagrama rompe el max-width de <main> y ocupa todo el ancho de
+     la ventana, para que el escalado disponga de más espacio y la letra se vea más grande. */
+  .evo-wrap{background:radial-gradient(ellipse at 30% 0%, #131b32 0%, #0a0f1e 55%, #070a14 100%);border-radius:14px;position:relative;overflow:hidden;margin:14px 0 10px;box-shadow:0 20px 50px rgba(4,8,20,.35);width:100vw;max-width:1900px;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);}
+  @media(min-width:1960px){.evo-wrap{margin-left:calc(50% - 950px);margin-right:calc(50% - 950px);}}
+  .evo-wrap::before{content:"";position:absolute;inset:0;background-image:radial-gradient(#2a3a63 1px, transparent 1px);background-size:30px 30px;opacity:.28;pointer-events:none;}
+  .evo-canvas{position:relative;z-index:2;width:1300px;padding:22px 26px;transform-origin:top left;}
+
+  .evo-head{margin-bottom:14px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;}
+  .evo-titleblock{max-width:66%;}
+  .evo-titleblock h1{font-family:var(--head-font);font-weight:700;font-size:25px;line-height:1.2;margin:0;color:#fff;}
+  .evo-titleblock h1 span{color:#38bdf8;display:block;}
+  .evo-titleblock p{color:#9fb0d4;font-size:13px;line-height:1.42;margin:7px 0 0;max-width:600px;}
+  .evo-titleblock p b{color:#38bdf8;font-weight:600;}
+  .evo-purpose{flex-shrink:0;display:flex;gap:10px;align-items:flex-start;background:rgba(56,189,248,.08);border:1px solid rgba(125,211,252,.25);border-radius:10px;padding:10px 14px;max-width:300px;}
+  .evo-purpose .pico{flex-shrink:0;width:30px;height:30px;border-radius:50%;border:1.5px solid #7dd3fc;display:flex;align-items:center;justify-content:center;font-size:14px;color:#7dd3fc;}
+  .evo-purpose .pk{display:block;font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#7dd3fc;margin-bottom:3px;}
+  .evo-purpose p{margin:0;font-size:11.5px;color:#c6d4f0;line-height:1.4;}
+  .evo-count{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#cfe0ff;background:rgba(56,189,248,.08);border:1px solid rgba(125,211,252,.25);padding:5px 14px;border-radius:20px;white-space:nowrap;margin-bottom:12px;}
+  .evo-count b{color:#7dd3fc;font-family:var(--head-font);font-size:15px;}
+
+  .evo-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px;align-items:stretch;}
+  /* Nota: usamos el combinador ">" para que estas reglas tengan mayor especificidad que
+     .evo-panel/.evo-mini (que también fijan grid-column) y así SIEMPRE ganen, sin importar
+     el orden de declaración en la hoja de estilos. */
+  .evo-grid>.sp-2{grid-column:span 2 !important;} .evo-grid>.sp-3{grid-column:span 3 !important;} .evo-grid>.sp-4{grid-column:span 4 !important;} .evo-grid>.sp-5{grid-column:span 5 !important;} .evo-grid>.sp-6{grid-column:span 6 !important;}
+  .evo-grid>.sp-7{grid-column:span 7 !important;} .evo-grid>.sp-8{grid-column:span 8 !important;} .evo-grid>.sp-12{grid-column:span 12 !important;}
+
+  .evo-panel{grid-column:span 12;background:rgba(13,19,37,.65);border:1px solid var(--pc2,rgba(255,255,255,.1));border-radius:10px;padding:11px 12px 10px;position:relative;}
+  .evo-panel.arrow-right::after{content:"→";position:absolute;right:-15px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;background:#0a0f1e;border:1px solid rgba(125,211,252,.35);display:flex;align-items:center;justify-content:center;font-size:12px;color:#7dd3fc;z-index:6;}
+  .evo-empresa-badge{margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 10px;border-radius:20px;background:rgba(139,92,246,.14);border:1px solid rgba(139,92,246,.4);}
+  .evo-empresa-badge span{font-size:14px;}
+  .evo-empresa-badge b{font-family:var(--head-font);font-size:10.5px;color:#c4b5fd;letter-spacing:.6px;text-transform:uppercase;}
+  .evo-region-badge{margin-top:8px;}
+  .evo-region-badge .evo-item{justify-content:center;border-radius:20px;background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.4);padding:6px 10px;margin-bottom:0;}
+  .evo-region-badge .evo-item .tx{flex:0 0 auto;}
+  .evo-region-badge .evo-item .tx b{font-size:10.5px;color:#86efac;letter-spacing:.5px;text-transform:uppercase;}
+  .evo-panel .ph{display:flex;align-items:center;gap:7px;margin-bottom:2px;}
+  .evo-panel .ph .num{font-family:var(--head-font);font-weight:700;font-size:13px;color:var(--pc);}
+  .evo-panel .ph h3{margin:0;font-size:12.5px;font-weight:700;color:#fff;letter-spacing:.15px;text-transform:uppercase;}
+  .evo-panel .psub{color:#93a5cc;font-size:11px;line-height:1.32;margin:3px 0 8px;}
+  .tier-label{display:block;font-size:8.5px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--pc);opacity:.8;margin:0 0 3px;}
+  .tier-arrow{text-align:center;color:var(--pc);opacity:.5;font-size:11px;line-height:1;margin:0 0 3px;}
+
+  .evo-item{display:flex;align-items:center;gap:8px;padding:6px 9px;border-radius:7px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02);margin-bottom:4px;cursor:pointer;transition:background .25s,border-color .25s,box-shadow .25s,opacity .25s;}
+  .evo-item:last-child{margin-bottom:0;}
+  .evo-item .ic{width:21px;height:21px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;border-radius:50%;background:rgba(255,255,255,.06);}
+  .evo-item .tx{flex:1;min-width:0;}
+  .evo-item .tx b{display:block;font-size:11.5px;color:#e7edfb;font-weight:600;line-height:1.25;}
+  .evo-item .tx small{display:block;font-size:9.5px;color:#8296bd;line-height:1.2;margin-top:1px;}
+  .evo-item.off{opacity:.45;}
+  .evo-item.s1{background:rgba(100,116,139,.2);border-color:rgba(148,163,184,.55);opacity:1;}
+  .evo-item.s1 .ic{background:#94a3b8;color:#0a0f1e;}
+  .evo-item.s2{background:rgba(56,189,248,.16);border-color:rgba(56,189,248,.55);box-shadow:0 0 10px -2px rgba(56,189,248,.45);opacity:1;}
+  .evo-item.s2 .ic{background:#38bdf8;color:#0a0f1e;}
+  .evo-item.s3{background:rgba(245,158,11,.16);border-color:rgba(245,158,11,.55);box-shadow:0 0 10px -2px rgba(245,158,11,.5);opacity:1;}
+  .evo-item.s3 .ic{background:#f59e0b;color:#0a0f1e;}
+  .evo-item.s4{background:rgba(34,197,94,.16);border-color:rgba(34,197,94,.55);box-shadow:0 0 10px -2px rgba(34,197,94,.5);opacity:1;}
+  .evo-item.s4 .ic{background:#22c55e;color:#0a0f1e;}
+  .evo-item:hover{border-color:color-mix(in srgb, var(--pc) 70%, transparent);}
+
+  .evo-legend{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 8px;}
+  .evo-legend span{display:inline-flex;align-items:center;gap:5px;font-size:9.5px;color:#a8b8d9;}
+  .evo-legend i{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0;}
+  .evo-legend .lg-s0{background:rgba(255,255,255,.25);}
+  .evo-legend .lg-s1{background:#94a3b8;} .evo-legend .lg-s2{background:#38bdf8;} .evo-legend .lg-s3{background:#f59e0b;} .evo-legend .lg-s4{background:#22c55e;}
+
+  .evo-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .evo-btn-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .evo-dl-btn{font-family:var(--body-font);font-size:11px;font-weight:600;color:#0a0f1e;background:#7dd3fc;border:none;border-radius:20px;padding:7px 16px;cursor:pointer;transition:background .2s;}
+  .evo-dl-btn:hover{background:#a5e4fd;}
+  .evo-dl-btn:disabled{opacity:.5;cursor:wait;}
+  .evo-clear-btn{font-family:var(--body-font);font-size:11px;font-weight:600;color:#cfe0ff;background:transparent;border:1px solid rgba(125,211,252,.4);border-radius:20px;padding:6px 15px;cursor:pointer;transition:background .2s,border-color .2s;}
+  .evo-clear-btn:hover{background:rgba(125,211,252,.1);border-color:rgba(125,211,252,.7);}
+
+  .evo-mini{grid-column:span 12;background:rgba(13,19,37,.5);border:1px dashed rgba(255,255,255,.14);border-radius:9px;padding:9px 12px;}
+  .evo-mini .mk{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--pc);margin-bottom:6px;display:block;}
+  .evo-mini .mrow{display:flex;flex-wrap:wrap;gap:6px;}
+  .evo-mini .mrow .evo-item{flex:1;min-width:88px;margin-bottom:0;}
+  .evo-mini .mtext{color:#a8b8d9;font-size:11.5px;line-height:1.42;margin:0;}
+
+  .evo-motor-badge{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 35% 30%, #2dd4ff 0%, #0891c9 55%, #075985 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(125,211,252,.35), 0 0 18px 4px rgba(56,189,248,.5);animation:evoPulse 3.2s ease-in-out infinite;margin:1px auto 5px;}
+  .evo-motor-badge b{color:#fff;font-family:var(--head-font);font-size:13px;}
+  .evo-motor-panel{display:flex;flex-direction:column;}
+  .evo-motor-ring{position:relative;flex:1;min-height:225px;margin-top:6px;}
+  .evo-motor-ring::before{content:"";position:absolute;left:50%;top:50%;width:80%;height:80%;transform:translate(-50%,-50%);border:1px dashed rgba(125,211,252,.22);border-radius:50%;}
+  .evo-motor-ring .evo-motor-badge{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0;z-index:3;}
+  .evo-motor-ring .evo-item{position:absolute;width:44%;flex-direction:column;text-align:center;margin:0;padding:4px 3px;gap:0;background:rgba(10,15,30,.78);}
+  .evo-motor-ring .evo-item .ic{margin:0 auto 2px;}
+  .evo-motor-ring .evo-item .tx small{display:none;}
+  @keyframes evoPulse{0%,100%{box-shadow:0 0 0 1px rgba(125,211,252,.35), 0 0 12px 2px rgba(56,189,248,.4);}50%{box-shadow:0 0 0 1px rgba(125,211,252,.5), 0 0 20px 5px rgba(56,189,248,.7);}}
+
+  .evo-pipeline{display:flex;flex-wrap:wrap;align-items:stretch;gap:4px;}
+  .evo-pipeline .evo-item{flex:1;min-width:96px;flex-direction:column;text-align:center;margin-bottom:0;padding:8px 5px;}
+  .evo-pipeline .evo-item .ic{margin-bottom:3px;}
+  .evo-pipeline .arrow{display:flex;align-items:center;color:#3a4a72;font-size:13px;padding:0 1px;}
+
+  .evo-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;}
+  .evo-stats .evo-item{flex-direction:column;text-align:center;margin-bottom:0;padding:8px 5px;}
+  .evo-stats .evo-item .ic{margin-bottom:3px;}
+  .evo-stats .evo-item .tx b{font-size:10.5px;}
+  .evo-stats.six .evo-item{padding:6px 3px;}
+  .evo-stats.six .evo-item .ic{width:17px;height:17px;font-size:9.5px;}
+  .evo-stats.six .evo-item .tx b{font-size:8.6px;line-height:1.18;}
+  .evo-unique-list{list-style:none;margin:5px 0 0;padding:0;display:flex;flex-direction:column;gap:4px;}
+  .evo-unique-list li{color:#c6d4f0;font-size:10.2px;line-height:1.3;display:flex;gap:5px;}
+  .evo-unique-list li::before{content:"✓";color:#4ade80;font-weight:700;flex-shrink:0;}
+  .evo-mini.tagline-mini{display:flex;flex-direction:column;justify-content:center;text-align:center;}
+
+  .evo-foot{position:relative;z-index:2;margin-top:9px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;justify-content:space-between;}
+  .evo-unique{flex:1;min-width:230px;}
+  .evo-unique h5{color:#7dd3fc;font-size:9px;letter-spacing:1px;text-transform:uppercase;margin:0 0 5px;}
+  .evo-unique ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;}
+  .evo-unique li{color:#c6d4f0;font-size:9.5px;display:flex;gap:6px;}
+  .evo-unique li::before{content:"✓";color:#4ade80;font-weight:700;}
+  .evo-tagline{flex-shrink:0;text-align:right;}
+  .evo-tagline div:first-child{color:#7690bb;font-size:9.5px;}
+  .evo-tagline div:last-child{color:#fff;font-family:var(--head-font);font-size:14px;font-weight:700;line-height:1.2;margin-top:2px;}
+  @media(max-width:760px){.evo-tagline{text-align:left;}.evo-titleblock{max-width:100%;}.evo-head{flex-direction:column;}.evo-purpose{max-width:100%;}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+    <div class="brand">
+      <div class="logo-box" id="brand-logo-box" style="display:none;"><img class="logo" id="brand-logo" alt="Logo"></div>
+      <button type="button" id="logo-upload-btn" class="logo-upload-btn" style="display:none;">+ Agregar logo de su Cámara</button>
+      <div class="brand-title">Radar IA
+      </div>
+      <button type="button" id="logo-change-btn" class="logo-change-btn" style="display:none;">Cambiar logo</button>
+    </div>
+    <input type="file" id="logo-upload-input" accept="image/png,image/jpeg,image/svg+xml" style="display:none;">
+  </header>
+
+<main>
+<div class="view active" style="display:block;">
+<section id="radar" class="view active">
+      <h1 class="page-title">Radar IA</h1>
+      <p class="page-sub">Convierta el perfil de la empresa en un prompt de investigación profunda para que su asistente de IA de confianza (ChatGPT, Claude, Gemini) rastree en minutos toda la oferta institucional vigente.</p>
+
+      <h3 class="section-h">¿Cómo funciona?</h3>
+      <div class="how-steps">
+        <div class="how-step"><div class="stepnum">1</div><h3>Diligencie el perfil</h3><p>Cuéntele al Radar quién es la empresa: dónde está, a qué cámara y caja de compensación pertenece, su sector y su objetivo.</p></div>
+        <div class="how-step"><div class="stepnum">2</div><h3>Genere el prompt</h3><p>El Radar arma un prompt de investigación exhaustiva, listo para copiar, con instrucciones precisas para su asistente de IA.</p></div>
+        <div class="how-step"><div class="stepnum">3</div><h3>Péguelo en su IA</h3><p>Ábralo en ChatGPT, Claude o Gemini y reciba el mapa completo de oportunidades vigentes, con fuente y fecha de cada una.</p></div>
+      </div>
+
+      <h3 class="section-h">El Radar investiga nueve frentes de oportunidad</h3>
+      <div class="cat-grid">
+        <div class="cat-chip">💰 Recursos no reembolsables</div>
+        <div class="cat-chip">📋 Convocatorias empresariales</div>
+        <div class="cat-chip">🎓 Formación gratuita</div>
+        <div class="cat-chip">🏦 Acceso a crédito</div>
+        <div class="cat-chip">⚙️ Innovación y productividad</div>
+        <div class="cat-chip">💻 Transformación digital e IA</div>
+        <div class="cat-chip">🌎 Internacionalización</div>
+        <div class="cat-chip">🌱 Sostenibilidad</div>
+        <div class="cat-chip">🤝 Cooperación internacional</div>
+      </div>
+
+      <h3 class="section-h">Perfil de la empresa</h3>
+      <div class="field-row-radar">
+        <div><label>Nombre de la empresa</label><input id="r-empresa" placeholder="ej. Textiles del Pacífico SAS"></div>
+        <div><label>Ciudad / municipio</label><select id="r-ciudad"></select></div>
+        <div><label>Cámara de Comercio</label><select id="r-camara"></select></div>
+        <div><label>Caja de compensación</label><select id="r-caja"></select></div>
+        <div><label>Sector económico</label><select id="r-sector"></select></div>
+        <div><label>Tamaño de la empresa</label>
+          <select id="r-tamano">
+            <option value="">Seleccione…</option>
+            <option>Microempresa</option>
+            <option>Pequeña empresa</option>
+            <option>Mediana empresa</option>
+            <option>Gran empresa</option>
+          </select>
+        </div>
+        <div><label>Tipo de apoyo priorizado</label><select id="r-apoyo"></select></div>
+      </div>
+
+      <div style="margin-bottom:26px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="radar.generate()">Generar diagnóstico IA →</button>
+        <button class="btn btn-outline" onclick="radar.clear()">Limpiar datos</button>
+      </div>
+
+      <div id="radar-prompt-out" style="display:none;">
+        <div class="prompt-card">
+          <div class="ptitle">PROMPT DE DIAGNÓSTICO</div>
+          <textarea readonly id="radar-prompt-ta" style="min-height:190px;"></textarea>
+          <div class="prow" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+            <div class="ai-links">
+              <a class="btn btn-outline btn-sm" href="https://chatgpt.com" target="_blank" rel="noopener">Abrir ChatGPT ↗</a>
+              <a class="btn btn-outline btn-sm" href="https://claude.ai" target="_blank" rel="noopener">Abrir Claude ↗</a>
+              <a class="btn btn-outline btn-sm" href="https://gemini.google.com" target="_blank" rel="noopener">Abrir Gemini ↗</a>
+            </div>
+            <button class="copy-btn" onclick="radar.copy()">Copiar prompt</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="note">Importante: el Radar IA es un punto de partida, no un asesor financiero ni jurídico. Verifique siempre la vigencia de cada programa en la fuente oficial antes de tomar decisiones o compartir la información con una empresa. Ni SCALA ni la Cámara de Comercio garantizan la exactitud de lo que entregue el asistente de IA.</p>
+    </section>
+</div>
+</main>
+
+<footer class="appfoot">
+    <div class="foot-brand"><img src="data:image/png;base64,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" alt="SCALA"> <span>Metodología desarrollada por SCALA Industries Group</span></div>
+    <div>www.scala.com.co</div>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+// --- Logo de la Cámara: subida local, sin depender de ningún asistente de IA ---
+// Se guarda como data URI en localStorage del navegador la primera vez que la Cámara
+// sube su logo (botón "+ Agregar logo de su Cámara"); desde entonces se aplica solo.
+// Si SCALA entrega esta copia ya personalizada para una Cámara específica, se fija
+// DEFAULT_LOGO (y opcionalmente DEFAULT_ACCENT) y se marca LOGO_LOCKED = true para
+// que quede fijo, sin botones de subir/cambiar logo — la copia genérica descargable
+// desde el Kit deja LOGO_LOCKED en false para que cualquier Cámara suba la suya.
+(function(){
+  var LOGO_KEY = 'scala_radar_camara_logo_v1';
+  var DEFAULT_LOGO = 'data:image/png;base64,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';
+  var DEFAULT_ACCENT = '#0066cd';
+  var LOGO_LOCKED = true;
+  var headerLogo = document.getElementById('brand-logo');
+  var headerLogoBox = document.getElementById('brand-logo-box');
+  var uploadBtn = document.getElementById('logo-upload-btn');
+  var changeBtn = document.getElementById('logo-change-btn');
+  var uploadInput = document.getElementById('logo-upload-input');
+  // El logo del pie de página SIEMPRE es el de SCALA (atribución de la metodología) —
+  // el logo de la Cámara solo va en el header, nunca reemplaza el del pie.
+
+  function applyLogo(dataUrl){
+    if(headerLogo){ headerLogo.src = dataUrl; }
+    if(headerLogoBox){ headerLogoBox.style.display = 'flex'; }
+    if(uploadBtn) uploadBtn.style.display = 'none';
+    if(changeBtn) changeBtn.style.display = LOGO_LOCKED ? 'none' : 'inline';
+  }
+  function showUploadPrompt(){
+    if(headerLogoBox) headerLogoBox.style.display = 'none';
+    if(uploadBtn) uploadBtn.style.display = LOGO_LOCKED ? 'none' : 'inline-block';
+    if(changeBtn) changeBtn.style.display = 'none';
+  }
+  function handleFile(file){
+    if(!file) return;
+    if(!file.type || file.type.indexOf('image/') !== 0){ toast('Seleccione un archivo de imagen (PNG, JPG o SVG).'); return; }
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var dataUrl = e.target.result;
+      try { localStorage.setItem(LOGO_KEY, dataUrl); } catch(err){}
+      applyLogo(dataUrl);
+      toast('Logo actualizado');
+    };
+    reader.onerror = function(){ toast('No se pudo leer la imagen, intente con otro archivo.'); };
+    reader.readAsDataURL(file);
+  }
+
+  var saved = null;
+  if(!LOGO_LOCKED){ try { saved = localStorage.getItem(LOGO_KEY); } catch(err){} }
+  var effectiveLogo = saved || DEFAULT_LOGO;
+  if(effectiveLogo){ applyLogo(effectiveLogo); } else { showUploadPrompt(); }
+
+  if(uploadBtn) uploadBtn.addEventListener('click', function(){ uploadInput.click(); });
+  if(changeBtn) changeBtn.addEventListener('click', function(){ uploadInput.click(); });
+  if(uploadInput) uploadInput.addEventListener('change', function(e){ handleFile(e.target.files && e.target.files[0]); });
+
+  // --- Color de marca de la Cámara (opcional) ---
+  // Aclara automáticamente DEFAULT_ACCENT ~35% hacia blanco para el tono claro (--blue-l),
+  // así solo hace falta fijar un color por Cámara, no dos.
+  function lighten(hex, amount){
+    var h = hex.replace('#','');
+    if(h.length===3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+    var r = parseInt(h.substring(0,2),16), g = parseInt(h.substring(2,4),16), b = parseInt(h.substring(4,6),16);
+    r = Math.round(r + (255-r)*amount); g = Math.round(g + (255-g)*amount); b = Math.round(b + (255-b)*amount);
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+  }
+  if(DEFAULT_ACCENT){
+    try {
+      document.documentElement.style.setProperty('--blue', DEFAULT_ACCENT);
+      document.documentElement.style.setProperty('--blue-l', lighten(DEFAULT_ACCENT, 0.35));
+    } catch(err){}
+  }
+})();
+
+var radar = {
+  camaras: [
+    "Cámara de Comercio de Aburrá Sur","Cámara de Comercio de Aguachica","Cámara de Comercio del Amazonas",
+    "Cámara de Comercio de Arauca","Cámara de Comercio de Armenia y del Quindío","Cámara de Comercio de Barrancabermeja",
+    "Cámara de Comercio de Barranquilla","Cámara de Comercio de Bogotá","Cámara de Comercio de Bucaramanga",
+    "Cámara de Comercio de Buenaventura","Cámara de Comercio de Buga","Cámara de Comercio de Cali",
+    "Cámara de Comercio de Cartagena","Cámara de Comercio de Cartago","Cámara de Comercio de Casanare",
+    "Cámara de Comercio del Cauca","Cámara de Comercio de Chinchiná","Cámara de Comercio del Chocó",
+    "Cámara de Comercio de Cúcuta","Cámara de Comercio de Dosquebradas","Cámara de Comercio de Duitama",
+    "Cámara de Comercio de Facatativá y Noroccidente de Cundinamarca","Cámara de Comercio de Florencia para el Caquetá",
+    "Cámara de Comercio de Girardot, Alto Magdalena y Tequendama","Cámara de Comercio de Honda, Guaduas y Norte del Tolima",
+    "Cámara de Comercio del Huila","Cámara de Comercio de Ibagué","Cámara de Comercio de Ipiales",
+    "Cámara de Comercio de La Dorada, Puerto Boyacá, Puerto Salgar y Oriente de Caldas","Cámara de Comercio de La Guajira",
+    "Cámara de Comercio de Magangué","Cámara de Comercio de Magdalena Medio y Nordeste Antioqueño",
+    "Cámara de Comercio de Manizales por Caldas","Cámara de Comercio de Medellín para Antioquia",
+    "Cámara de Comercio de Montería","Cámara de Comercio de Ocaña","Cámara de Comercio del Oriente Antioqueño",
+    "Cámara de Comercio de Palmira","Cámara de Comercio de Pamplona","Cámara de Comercio de Pasto",
+    "Cámara de Comercio de Pereira por Risaralda","Cámara de Comercio del Piedemonte Araucano","Cámara de Comercio del Putumayo",
+    "Cámara de Comercio de San Andrés, Providencia y Santa Catalina","Cámara de Comercio de San José del Guaviare",
+    "Cámara de Comercio de Santa Marta para el Magdalena","Cámara de Comercio de Santa Rosa de Cabal",
+    "Cámara de Comercio de Sevilla","Cámara de Comercio de Sincelejo","Cámara de Comercio de Soacha",
+    "Cámara de Comercio de Sogamoso","Cámara de Comercio del Sur y Oriente del Tolima","Cámara de Comercio de Tuluá",
+    "Cámara de Comercio de Tumaco","Cámara de Comercio de Tunja","Cámara de Comercio de Urabá",
+    "Cámara de Comercio de Valledupar para el Valle del Río Cesar","Cámara de Comercio de Villavicencio",
+  ],
+  cajas: [
+    "Cafaba (Barrancabermeja, Santander)","Cafam (Bogotá / Cundinamarca)","Cafamaz (Amazonas)","Cafasur (Espinal, Tolima)",
+    "Cajacopi Atlántico (Atlántico)","Cajamag (Magdalena)","Cajasai (San Andrés, Providencia y Santa Catalina)","Cajasan (Santander)",
+    "Cofrem (Meta)","Colsubsidio (Bogotá / Cundinamarca)","Combarranquilla (Atlántico)","Comcaja (cobertura nacional rural/campesina)",
+    "Comfaboy (Boyacá)","Comfaca (Caquetá)","Comfacasanare (Casanare)","Comfacauca (Cauca)","Comfacesar (Cesar)",
+    "Comfachocó (Chocó)","Comfacor (Córdoba)","Comfacundi (Cundinamarca)","Comfaguajira (La Guajira)","Comfama (Antioquia)",
+    "Comfamiliar Atlántico (Atlántico)","Comfamiliar Cartagena y Bolívar (Bolívar)","Comfamiliar Huila (Huila)",
+    "Comfamiliar Nariño (Nariño)","Comfamiliar Putumayo (Putumayo)","Comfamiliar Risaralda (Risaralda)",
+    "Comfandi (Valle del Cauca)","Comfanorte (Norte de Santander)","Comfaoriente (Norte de Santander)","Comfasucre (Sucre)",
+    "Comfatolima (Tolima)","Comfenalco Antioquia (Antioquia)","Comfenalco Cartagena (Bolívar)","Comfenalco Quindío (Quindío)",
+    "Comfenalco Santander (Santander)","Comfenalco Tolima (Tolima)","Comfenalco Valle (Valle del Cauca)","Comfiar (Arauca)",
+    "Compensar (Bogotá / Cundinamarca)","Confa (Caldas)",
+  ],
+  ciudades: [
+    "Abejorral (Antioquia)", "Ábrego (Norte de Santander)", "Abriaquí (Antioquia)", "Acacías (Meta)", "Acandí (Chocó)", "Acevedo (Huila)", "Achí (Bolívar)", "Agrado (Huila)", "Agua de Dios (Cundinamarca)", "Aguachica (Cesar)", "Aguada (Santander)", "Aguadas (Caldas)", "Aguazul (Casanare)", "Agustín Codazzi (Cesar)", "Aipe (Huila)", "Albán (Cundinamarca)", "Albania (Caquetá)", "Albania (La Guajira)", "Albania (Santander)", "Alcalá (Valle del Cauca)", "Aldana (Nariño)", "Alejandría (Antioquia)", "Algarrobo (Magdalena)", "Algeciras (Huila)", "Almaguer (Cauca)", "Almeida (Boyacá)", "Alpujarra (Tolima)", "Altamira (Huila)", "Alto Baudó (Chocó)", "Altos del Rosario (Bolívar)", "Alvarado (Tolima)", "Amagá (Antioquia)", "Amalfi (Antioquia)", "Ambalema (Tolima)", "Anapoima (Cundinamarca)", "Ancuyá (Nariño)", "Andalucía (Valle del Cauca)", "Andes (Antioquia)", "Angelópolis (Antioquia)", "Angostura (Antioquia)", "Anolaima (Cundinamarca)", "Anorí (Antioquia)", "Anserma (Caldas)", "Ansermanuevo (Valle del Cauca)", "Anzá (Antioquia)", "Anzoátegui (Tolima)", "Apartadó (Antioquia)", "Apía (Risaralda)", "Apulo (Cundinamarca)", "Aquitania (Boyacá)", "Aracataca (Magdalena)", "Aranzazu (Caldas)", "Aratoca (Santander)", "Arauca (Arauca)", "Arauquita (Arauca)", "Arbeláez (Cundinamarca)", "Arboleda (Nariño)", "Arboledas (Norte de Santander)", "Arboletes (Antioquia)", "Arcabuco (Boyacá)", "Arenal (Bolívar)", "Argelia (Antioquia)", "Argelia (Cauca)", "Argelia (Valle del Cauca)", "Ariguaní (Magdalena)", "Arjona (Bolívar)", "Armenia (Antioquia)", "Armenia (Quindío)", "Armero (Tolima)", "Arroyohondo (Bolívar)", "Astrea (Cesar)", "Ataco (Tolima)", "Ayapel (Córdoba)", "Bagadó (Chocó)", "Bahía Solano (Chocó)", "Bajo Baudó (Chocó)", "Balboa (Cauca)", "Balboa (Risaralda)", "Baranoa (Atlántico)", "Baraya (Huila)", "Barbacoas (Nariño)", "Barbosa (Antioquia)", "Barbosa (Santander)", "Barichara (Santander)", "Barranca de Upía (Meta)", "Barrancabermeja (Santander)", "Barrancas (La Guajira)", "Barranco de Loba (Bolívar)", "Barrancominas (Guainía)", "Barranquilla (Atlántico)", "Becerril (Cesar)", "Belalcázar (Caldas)", "Belén (Boyacá)", "Belén (Nariño)", "Belén de los Andaquíes (Caquetá)", "Belén de Umbría (Risaralda)", "Bello (Antioquia)", "Belmira (Antioquia)", "Beltrán (Cundinamarca)", "Berbeo (Boyacá)", "Betania (Antioquia)", "Betéitiva (Boyacá)", "Betulia (Antioquia)", "Betulia (Santander)", "Bituima (Cundinamarca)", "Boavita (Boyacá)", "Bochalema (Norte de Santander)", "Bogotá D.C. (Bogotá D.C.)", "Bojacá (Cundinamarca)", "Bojayá (Chocó)", "Bolívar (Cauca)", "Bolívar (Santander)", "Bolívar (Valle del Cauca)", "Bosconia (Cesar)", "Boyacá (Boyacá)", "Brazuelo de Papayal (Bolívar)", "Briceño (Antioquia)", "Briceño (Boyacá)", "Bucaramanga (Santander)", "Bucarasica (Norte de Santander)", "Buenaventura (Valle del Cauca)", "Buenavista (Boyacá)", "Buenavista (Córdoba)", "Buenavista (Quindío)", "Buenavista (Sucre)", "Buenos Aires (Cauca)", "Buesaco (Nariño)", "Buga (Valle del Cauca)", "Bugalagrande (Valle del Cauca)", "Buriticá (Antioquia)", "Busbanzá (Boyacá)", "Cabrera (Cundinamarca)", "Cabrera (Santander)", "Cabuyaro (Meta)", "Cacahual (Guainía)", "Cáceres (Antioquia)", "Cachipay (Cundinamarca)", "Cáchira (Norte de Santander)", "Cácota (Norte de Santander)", "Caicedo (Antioquia)", "Caicedonia (Valle del Cauca)", "Caimito (Sucre)", "Cajamarca (Tolima)", "Cajibío (Cauca)", "Cajicá (Cundinamarca)", "Calamar (Bolívar)", "Calamar (Guaviare)", "Calarcá (Quindío)", "Caldas (Antioquia)", "Caldas (Boyacá)", "Caldono (Cauca)", "Cali (Valle del Cauca)", "California (Santander)", "Calima (Valle del Cauca)", "Caloto (Cauca)", "Campamento (Antioquia)", "Campo de la Cruz (Atlántico)", "Campoalegre (Huila)", "Campohermoso (Boyacá)", "Canalete (Córdoba)", "Cañasgordas (Antioquia)", "Candelaria (Atlántico)", "Candelaria (Valle del Cauca)", "Cantagallo (Bolívar)", "Cantón de San Pablo (Chocó)", "Caparrapí (Cundinamarca)", "Capitanejo (Santander)", "Cáqueza (Cundinamarca)", "Caracolí (Antioquia)", "Caramanta (Antioquia)", "Carcasí (Santander)", "Carepa (Antioquia)", "Carmen de Apicalá (Tolima)", "Carmen de Carupa (Cundinamarca)", "Carolina del Príncipe (Antioquia)", "Cartagena de Indias (Bolívar)", "Cartagena del Chairá (Caquetá)", "Cartago (Valle del Cauca)", "Carurú (Vaupés)", "Casabianca (Tolima)", "Castilla la Nueva (Meta)", "Caucasia (Antioquia)", "Cepitá (Santander)", "Cereté (Córdoba)", "Cerinza (Boyacá)", "Cerrito (Santander)", "Cerro de San Antonio (Magdalena)", "Cértegui (Chocó)", "Chachagüí (Nariño)", "Chaguaní (Cundinamarca)", "Chalán (Sucre)", "Chámeza (Casanare)", "Chaparral (Tolima)", "Charalá (Santander)", "Charta (Santander)", "Chía (Cundinamarca)", "Chibolo (Magdalena)", "Chigorodó (Antioquia)", "Chimá (Córdoba)", "Chima (Santander)", "Chimichagua (Cesar)", "Chinácota (Norte de Santander)", "Chinavita (Boyacá)", "Chinchiná (Caldas)", "Chinú (Córdoba)", "Chipaque (Cundinamarca)", "Chipatá (Santander)", "Chiquinquirá (Boyacá)", "Chíquiza (Boyacá)", "Chiriguaná (Cesar)", "Chiscas (Boyacá)", "Chita (Boyacá)", "Chitagá (Norte de Santander)", "Chitaraque (Boyacá)", "Chivatá (Boyacá)", "Chivor (Boyacá)", "Choachí (Cundinamarca)", "Chocontá (Cundinamarca)", "Cicuco (Bolívar)", "Ciénaga (Magdalena)", "Ciénaga de Oro (Córdoba)", "Ciénega (Boyacá)", "Cimitarra (Santander)", "Circasia (Quindío)", "Cisneros (Antioquia)", "Ciudad Bolívar (Antioquia)", "Clemencia (Bolívar)", "Cocorná (Antioquia)", "Coello (Tolima)", "Cogua (Cundinamarca)", "Colombia (Huila)", "Colón (Nariño)", "Colón (Putumayo)", "Colosó (Sucre)", "Cómbita (Boyacá)", "Concepción (Antioquia)", "Concepción (Santander)", "Concordia (Antioquia)", "Concordia (Magdalena)", "Condoto (Chocó)", "Confines (Santander)", "Consacá (Nariño)", "Contadero (Nariño)", "Contratación (Santander)", "Convención (Norte de Santander)", "Copacabana (Antioquia)", "Coper (Boyacá)", "Córdoba (Bolívar)", "Córdoba (Nariño)", "Córdoba (Quindío)", "Corinto (Cauca)", "Coromoro (Santander)", "Corozal (Sucre)", "Corrales (Boyacá)", "Cota (Cundinamarca)", "Cotorra (Córdoba)", "Covarachía (Boyacá)", "Coveñas (Sucre)", "Coyaima (Tolima)", "Cravo Norte (Arauca)", "Cuaspud (Nariño)", "Cubará (Boyacá)", "Cubarral (Meta)", "Cucaita (Boyacá)", "Cucunubá (Cundinamarca)", "Cúcuta (Norte de Santander)", "Cucutilla (Norte de Santander)", "Cuítiva (Boyacá)", "Cumaral (Meta)", "Cumaribo (Vichada)", "Cumbal (Nariño)", "Cumbitara (Nariño)", "Cunday (Tolima)", "Curillo (Caquetá)", "Curití (Santander)", "Curumaní (Cesar)", "Dabeiba (Antioquia)", "Dagua (Valle del Cauca)", "Dibulla (La Guajira)", "Distracción (La Guajira)", "Dolores (Tolima)", "Donmatías (Antioquia)", "Dosquebradas (Risaralda)", "Duitama (Boyacá)", "Duranía (Norte de Santander)", "Ebéjico (Antioquia)", "El Águila (Valle del Cauca)", "El Atrato (Chocó)", "El Bagre (Antioquia)", "El Banco (Magdalena)", "El Cairo (Valle del Cauca)", "El Calvario (Meta)", "El Carmen (Norte de Santander)", "El Carmen de Atrato (Chocó)", "El Carmen de Bolívar (Bolívar)", "El Carmen de Chucurí (Santander)", "El Carmen de Viboral (Antioquia)", "El Carmen del Darién (Chocó)", "El Castillo (Meta)", "El Cerrito (Valle del Cauca)", "El Charco (Nariño)", "El Cocuy (Boyacá)", "El Colegio (Cundinamarca)", "El Copey (Cesar)", "El Doncello (Caquetá)", "El Dorado (Meta)", "El Dovio (Valle del Cauca)", "El Encanto (Amazonas)", "El Espinal (Tolima)", "El Espino (Boyacá)", "El Guacamayo (Santander)", "El Guamo (Bolívar)", "El Molino (La Guajira)", "El Paso (Cesar)", "El Paujil (Caquetá)", "El Peñol (Antioquia)", "El Peñol (Nariño)", "El Peñón (Bolívar)", "El Peñón (Cundinamarca)", "El Peñón (Santander)", "El Piñón (Magdalena)", "El Pital (Huila)", "El Playón (Santander)", "El Retén (Magdalena)", "El Retiro (Antioquia)", "El Retorno (Guaviare)", "El Roble (Sucre)", "El Rosal (Cundinamarca)", "El Rosario (Nariño)", "El Santuario (Antioquia)", "El Socorro (Santander)", "El Tablón (Nariño)", "El Tambo (Cauca)", "El Tambo (Nariño)", "El Tarra (Norte de Santander)", "El Zulia (Norte de Santander)", "Elías (Huila)", "Encino (Santander)", "Enciso (Santander)", "Entrerríos (Antioquia)", "Envigado (Antioquia)", "Facatativá (Cundinamarca)", "Falán (Tolima)", "Filadelfia (Caldas)", "Filandia (Quindío)", "Firavitoba (Boyacá)", "Flandes (Tolima)", "Florencia (Caquetá)", "Florencia (Cauca)", "Floresta (Boyacá)", "Florián (Santander)", "Florida (Valle del Cauca)", "Floridablanca (Santander)", "Fómeque (Cundinamarca)", "Fonseca (La Guajira)", "Fortul (Arauca)", "Fosca (Cundinamarca)", "Francisco Pizarro (Nariño)", "Fredonia (Antioquia)", "Fresno (Tolima)", "Frontino (Antioquia)", "Fuente de Oro (Meta)", "Fundación (Magdalena)", "Funes (Nariño)", "Funza (Cundinamarca)", "Fúquene (Cundinamarca)", "Fusagasugá (Cundinamarca)", "Gachalá (Cundinamarca)", "Gachancipá (Cundinamarca)", "Gachantivá (Boyacá)", "Gachetá (Cundinamarca)", "Galán (Santander)", "Galapa (Atlántico)", "Galeras (Sucre)", "Gama (Cundinamarca)", "Gamarra (Cesar)", "Gámbita (Santander)", "Gámeza (Boyacá)", "Garagoa (Boyacá)", "Garzón (Huila)", "Génova (Quindío)", "Gigante (Huila)", "Ginebra (Valle del Cauca)", "Giraldo (Antioquia)", "Girardot (Cundinamarca)", "Girardota (Antioquia)", "Girón (Santander)", "Gómez Plata (Antioquia)", "González (Cesar)", "Gramalote (Norte de Santander)", "Granada (Antioquia)", "Granada (Cundinamarca)", "Granada (Meta)", "Guaca (Santander)", "Guacamayas (Boyacá)", "Guacarí (Valle del Cauca)", "Guachené (Cauca)", "Guachetá (Cundinamarca)", "Guachucal (Nariño)", "Guadalupe (Antioquia)", "Guadalupe (Huila)", "Guadalupe (Santander)", "Guaduas (Cundinamarca)", "Guaitarilla (Nariño)", "Gualmatán (Nariño)", "Guamal (Magdalena)", "Guamal (Meta)", "Guamo (Tolima)", "Guapí (Cauca)", "Guapotá (Santander)", "Guaranda (Sucre)", "Guarne (Antioquia)", "Guasca (Cundinamarca)", "Guatapé (Antioquia)", "Guataquí (Cundinamarca)", "Guatavita (Cundinamarca)", "Guateque (Boyacá)", "Guática (Risaralda)", "Guavatá (Santander)", "Guayabal de Síquima (Cundinamarca)", "Guayabetal (Cundinamarca)", "Guayatá (Boyacá)", "Güepsa (Santander)", "Güicán (Boyacá)", "Gutiérrez (Cundinamarca)", "Hacarí (Norte de Santander)", "Hatillo de Loba (Bolívar)", "Hato (Santander)", "Hato Corozal (Casanare)", "Hatonuevo (La Guajira)", "Heliconia (Antioquia)", "Herrán (Norte de Santander)", "Herveo (Tolima)", "Hispania (Antioquia)", "Hobo (Huila)", "Honda (Tolima)", "Ibagué (Tolima)", "Icononzo (Tolima)", "Iles (Nariño)", "Imués (Nariño)", "Inírida (Guainía)", "Inzá (Cauca)", "Ipiales (Nariño)", "Íquira (Huila)", "Isnos (Huila)", "Istmina (Chocó)", "Itagüí (Antioquia)", "Ituango (Antioquia)", "Iza (Boyacá)", "Jambaló (Cauca)", "Jamundí (Valle del Cauca)", "Jardín (Antioquia)", "Jenesano (Boyacá)", "Jericó (Antioquia)", "Jericó (Boyacá)", "Jerusalén (Cundinamarca)", "Jesús María (Santander)", "Jordán (Santander)", "Juan de Acosta (Atlántico)", "Junín (Cundinamarca)", "Juradó (Chocó)", "La Apartada (Córdoba)", "La Argentina (Huila)", "La Belleza (Santander)", "La Calera (Cundinamarca)", "La Capilla (Boyacá)", "La Ceja (Antioquia)", "La Celia (Risaralda)", "La Chorrera (Amazonas)", "La Cruz (Nariño)", "La Cumbre (Valle del Cauca)", "La Dorada (Caldas)", "La Esperanza (Norte de Santander)", "La Estrella (Antioquia)", "La Florida (Nariño)", "La Gloria (Cesar)", "La Guadalupe (Guainía)", "La Jagua de Ibirico (Cesar)", "La Jagua del Pilar (La Guajira)", "La Llanada (Nariño)", "La Macarena (Meta)", "La Merced (Caldas)", "La Mesa (Cundinamarca)", "La Montañita (Caquetá)", "La Palma (Cundinamarca)", "La Paz (Cesar)", "La Paz (Santander)", "La Pedrera (Amazonas)", "La Peña (Cundinamarca)", "La Pintada (Antioquia)", "La Plata (Huila)", "La Playa de Belén (Norte de Santander)", "La Primavera (Vichada)", "La Salina (Casanare)", "La Sierra (Cauca)", "La Tebaida (Quindío)", "La Tola (Nariño)", "La Unión (Antioquia)", "La Unión (Nariño)", "La Unión (Sucre)", "La Unión (Valle del Cauca)", "La Uribe (Meta)", "La Uvita (Boyacá)", "La Vega (Cauca)", "La Vega (Cundinamarca)", "La Victoria (Amazonas)", "La Victoria (Boyacá)", "La Victoria (Valle del Cauca)", "La Virginia (Risaralda)", "Labateca (Norte de Santander)", "Labranzagrande (Boyacá)", "Landázuri (Santander)", "Lebrija (Santander)", "Leiva (Nariño)", "Lejanías (Meta)", "Lenguazaque (Cundinamarca)", "Lérida (Tolima)", "Leticia (Amazonas)", "Líbano (Tolima)", "Liborina (Antioquia)", "Linares (Nariño)", "Litoral de San Juan (Chocó)", "Lloró (Chocó)", "López de Micay (Cauca)", "Lorica (Córdoba)", "Los Andes (Nariño)", "Los Córdobas (Córdoba)", "Los Palmitos (Sucre)", "Los Patios (Norte de Santander)", "Los Santos (Santander)", "Lourdes (Norte de Santander)", "Luruaco (Atlántico)", "Macanal (Boyacá)", "Macaravita (Santander)", "Maceo (Antioquia)", "Machetá (Cundinamarca)", "Madrid (Cundinamarca)", "Magangué (Bolívar)", "Magüí Payán (Nariño)", "Mahates (Bolívar)", "Maicao (La Guajira)", "Majagual (Sucre)", "Málaga (Santander)", "Malambo (Atlántico)", "Mallama (Nariño)", "Manatí (Atlántico)", "Manaure (La Guajira)", "Manaure Balcón del Cesar (Cesar)", "Maní (Casanare)", "Manizales (Caldas)", "Manta (Cundinamarca)", "Manzanares (Caldas)", "Mapiripán (Meta)", "Margarita (Bolívar)", "María la Baja (Bolívar)", "Marinilla (Antioquia)", "Maripí (Boyacá)", "Mariquita (Tolima)", "Marmato (Caldas)", "Marquetalia (Caldas)", "Marsella (Risaralda)", "Marulanda (Caldas)", "Matanza (Santander)", "Medellín (Antioquia)", "Medina (Cundinamarca)", "Medio Atrato (Chocó)", "Medio Baudó (Chocó)", "Medio San Juan (Chocó)", "Melgar (Tolima)", "Mercaderes (Cauca)", "Mesetas (Meta)", "Milán (Caquetá)", "Miraflores (Boyacá)", "Miraflores (Guaviare)", "Miranda (Cauca)", "Mirití-Paraná (Amazonas)", "Mistrató (Risaralda)", "Mitú (Vaupés)", "Mocoa (Putumayo)", "Mogotes (Santander)", "Molagavita (Santander)", "Momil (Córdoba)", "Mongua (Boyacá)", "Monguí (Boyacá)", "Moniquirá (Boyacá)", "Moñitos (Córdoba)", "Montebello (Antioquia)", "Montecristo (Bolívar)", "Montelíbano (Córdoba)", "Montenegro (Quindío)", "Montería (Córdoba)", "Monterrey (Casanare)", "Morales (Bolívar)", "Morales (Cauca)", "Morelia (Caquetá)", "Morichal Nuevo (Guainía)", "Morroa (Sucre)", "Mosquera (Cundinamarca)", "Mosquera (Nariño)", "Motavita (Boyacá)", "Murillo (Tolima)", "Murindó (Antioquia)", "Mutatá (Antioquia)", "Mutiscua (Norte de Santander)", "Muzo (Boyacá)", "Nariño (Antioquia)", "Nariño (Cundinamarca)", "Nariño (Nariño)", "Nátaga (Huila)", "Natagaima (Tolima)", "Nechí (Antioquia)", "Necoclí (Antioquia)", "Neira (Caldas)", "Neiva (Huila)", "Nemocón (Cundinamarca)", "Nilo (Cundinamarca)", "Nimaima (Cundinamarca)", "Nobsa (Boyacá)", "Nocaima (Cundinamarca)", "Norcasia (Caldas)", "Norosí (Bolívar)", "Nóvita (Chocó)", "Nueva Granada (Magdalena)", "Nuevo Belén de Bajirá (Chocó)", "Nuevo Colón (Boyacá)", "Nunchía (Casanare)", "Nuquí (Chocó)", "Obando (Valle del Cauca)", "Ocamonte (Santander)", "Ocaña (Norte de Santander)", "Oiba (Santander)", "Oicatá (Boyacá)", "Olaya (Antioquia)", "Olaya Herrera (Nariño)", "Onzaga (Santander)", "Oporapa (Huila)", "Orito (Putumayo)", "Orocué (Casanare)", "Ortega (Tolima)", "Ospina (Nariño)", "Otanche (Boyacá)", "Ovejas (Sucre)", "Pachavita (Boyacá)", "Pacho (Cundinamarca)", "Pacoa (Vaupés)", "Pácora (Caldas)", "Padilla (Cauca)", "Páez (Boyacá)", "Páez (Cauca)", "Paicol (Huila)", "Pailitas (Cesar)", "Paime (Cundinamarca)", "Paipa (Boyacá)", "Pajarito (Boyacá)", "Palermo (Huila)", "Palestina (Caldas)", "Palestina (Huila)", "Palmar (Santander)", "Palmar de Varela (Atlántico)", "Palmas del Socorro (Santander)", "Palmira (Valle del Cauca)", "Palocabildo (Tolima)", "Pamplona (Norte de Santander)", "Pamplonita (Norte de Santander)", "Pana Pana (Guainía)", "Pandi (Cundinamarca)", "Panqueba (Boyacá)", "Papunaua (Vaupés)", "Páramo (Santander)", "Paratebueno (Cundinamarca)", "Pasca (Cundinamarca)", "Pasto (Nariño)", "Patía (Cauca)", "Pauna (Boyacá)", "Paya (Boyacá)", "Paz de Ariporo (Casanare)", "Paz del Río (Boyacá)", "Pedraza (Magdalena)", "Pelaya (Cesar)", "Pensilvania (Caldas)", "Peque (Antioquia)", "Pereira (Risaralda)", "Pesca (Boyacá)", "Piamonte (Cauca)", "Piedecuesta (Santander)", "Piedras (Tolima)", "Piendamó (Cauca)", "Pijao (Quindío)", "Pijiño del Carmen (Magdalena)", "Pinchote (Santander)", "Pinillos (Bolívar)", "Piojó (Atlántico)", "Pisba (Boyacá)", "Pitalito (Huila)", "Pivijay (Magdalena)", "Planadas (Tolima)", "Planeta Rica (Córdoba)", "Plato (Magdalena)", "Policarpa (Nariño)", "Polonuevo (Atlántico)", "Ponedera (Atlántico)", "Popayán (Cauca)", "Pore (Casanare)", "Potosí (Nariño)", "Pradera (Valle del Cauca)", "Prado (Tolima)", "Providencia (Nariño)", "Providencia y Santa Catalina Islas (San Andrés y Providencia)", "Pueblo Bello (Cesar)", "Pueblo Nuevo (Córdoba)", "Pueblo Rico (Risaralda)", "Pueblo Viejo (Magdalena)", "Pueblorrico (Antioquia)", "Puente Nacional (Santander)", "Puerres (Nariño)", "Puerto Alegría (Amazonas)", "Puerto Arica (Amazonas)", "Puerto Asís (Putumayo)", "Puerto Berrío (Antioquia)", "Puerto Boyacá (Boyacá)", "Puerto Caicedo (Putumayo)", "Puerto Carreño (Vichada)", "Puerto Colombia (Atlántico)", "Puerto Colombia (Guainía)", "Puerto Concordia (Meta)", "Puerto Escondido (Córdoba)", "Puerto Gaitán (Meta)", "Puerto Guzmán (Putumayo)", "Puerto Leguízamo (Putumayo)", "Puerto Libertador (Córdoba)", "Puerto Lleras (Meta)", "Puerto López (Meta)", "Puerto Nare (Antioquia)", "Puerto Nariño (Amazonas)", "Puerto Parra (Santander)", "Puerto Rico (Caquetá)", "Puerto Rico (Meta)", "Puerto Rondón (Arauca)", "Puerto Salgar (Cundinamarca)", "Puerto Santander (Amazonas)", "Puerto Santander (Norte de Santander)", "Puerto Tejada (Cauca)", "Puerto Triunfo (Antioquia)", "Puerto Wilches (Santander)", "Pulí (Cundinamarca)", "Pupiales (Nariño)", "Puracé (Cauca)", "Purificación (Tolima)", "Purísima (Córdoba)", "Quebradanegra (Cundinamarca)", "Quetame (Cundinamarca)", "Quibdó (Chocó)", "Quimbaya (Quindío)", "Quinchía (Risaralda)", "Quípama (Boyacá)", "Quipile (Cundinamarca)", "Ragonvalia (Norte de Santander)", "Ramiriquí (Boyacá)", "Ráquira (Boyacá)", "Recetor (Casanare)", "Regidor (Bolívar)", "Remedios (Antioquia)", "Remolino (Magdalena)", "Repelón (Atlántico)", "Restrepo (Meta)", "Restrepo (Valle del Cauca)", "Ricaurte (Cundinamarca)", "Ricaurte (Nariño)", "Río de Oro (Cesar)", "Río Iró (Chocó)", "Río Quito (Chocó)", "Río Viejo (Bolívar)", "Rioblanco (Tolima)", "Riofrío (Valle del Cauca)", "Riohacha (La Guajira)", "Rionegro (Antioquia)", "Rionegro (Santander)", "Riosucio (Caldas)", "Riosucio (Chocó)", "Risaralda (Caldas)", "Rivera (Huila)", "Roberto Payán (Nariño)", "Roldanillo (Valle del Cauca)", "Roncesvalles (Tolima)", "Rondón (Boyacá)", "Rosas (Cauca)", "Rovira (Tolima)", "Sabana de Torres (Santander)", "Sabanagrande (Atlántico)", "Sabanalarga (Antioquia)", "Sabanalarga (Atlántico)", "Sabanalarga (Casanare)", "Sabanas de San Ángel (Magdalena)", "Sabaneta (Antioquia)", "Saboyá (Boyacá)", "Sácama (Casanare)", "Sáchica (Boyacá)", "Sahagún (Córdoba)", "Saladoblanco (Huila)", "Salamina (Caldas)", "Salamina (Magdalena)", "Salazar de Las Palmas (Norte de Santander)", "Saldaña (Tolima)", "Salento (Quindío)", "Salgar (Antioquia)", "Samacá (Boyacá)", "Samaná (Caldas)", "Samaniego (Nariño)", "Sampués (Sucre)", "San Agustín (Huila)", "San Alberto (Cesar)", "San Andrés (San Andrés y Providencia)", "San Andrés (Santander)", "San Andrés de Cuerquia (Antioquia)", "San Andrés de Sotavento (Córdoba)", "San Antero (Córdoba)", "San Antonio (Tolima)", "San Antonio de Palmito (Sucre)", "San Antonio del Tequendama (Cundinamarca)", "San Benito (Santander)", "San Benito Abad (Sucre)", "San Bernardo (Cundinamarca)", "San Bernardo (Nariño)", "San Bernardo del Viento (Córdoba)", "San Calixto (Norte de Santander)", "San Carlos (Antioquia)", "San Carlos (Córdoba)", "San Carlos de Guaroa (Meta)", "San Cayetano (Cundinamarca)", "San Cayetano (Norte de Santander)", "San Cristóbal (Bolívar)", "San Diego (Cesar)", "San Eduardo (Boyacá)", "San Estanislao (Bolívar)", "San Felipe (Guainía)", "San Fernando (Bolívar)", "San Francisco (Antioquia)", "San Francisco (Cundinamarca)", "San Francisco (Putumayo)", "San Gil (Santander)", "San Jacinto (Bolívar)", "San Jacinto del Cauca (Bolívar)", "San Jerónimo (Antioquia)", "San Joaquín (Santander)", "San José (Caldas)", "San José de Albán (Nariño)", "San José de la Montaña (Antioquia)", "San José de Miranda (Santander)", "San José de Pare (Boyacá)", "San José de Uré (Córdoba)", "San José del Fragua (Caquetá)", "San José del Guaviare (Guaviare)", "San José del Palmar (Chocó)", "San Juan de Arama (Meta)", "San Juan de Betulia (Sucre)", "San Juan de Rioseco (Cundinamarca)", "San Juan de Urabá (Antioquia)", "San Juan del Cesar (La Guajira)", "San Juan Nepomuceno (Bolívar)", "San Juanito (Meta)", "San Lorenzo (Nariño)", "San Luis (Antioquia)", "San Luis (Tolima)", "San Luis de Gaceno (Boyacá)", "San Luis de Palenque (Casanare)", "San Marcos (Sucre)", "San Martín (Cesar)", "San Martín (Meta)", "San Martín de Loba (Bolívar)", "San Mateo (Boyacá)", "San Miguel (Putumayo)", "San Miguel (Santander)", "San Miguel de Sema (Boyacá)", "San Onofre (Sucre)", "San Pablo (Bolívar)", "San Pablo (Nariño)", "San Pablo de Borbur (Boyacá)", "San Pedro (Sucre)", "San Pedro (Valle del Cauca)", "San Pedro de Cartago (Nariño)", "San Pedro de los Milagros (Antioquia)", "San Pedro de Urabá (Antioquia)", "San Pelayo (Córdoba)", "San Rafael (Antioquia)", "San Roque (Antioquia)", "San Sebastián (Cauca)", "San Sebastián de Buenavista (Magdalena)", "San Vicente de Chucurí (Santander)", "San Vicente del Caguán (Caquetá)", "San Vicente Ferrer (Antioquia)", "San Zenón (Magdalena)", "Sandoná (Nariño)", "Santa Ana (Magdalena)", "Santa Bárbara (Antioquia)", "Santa Bárbara (Nariño)", "Santa Bárbara (Santander)", "Santa Bárbara de Pinto (Magdalena)", "Santa Catalina (Bolívar)", "Santa Cruz de Mompox (Bolívar)", "Santa Fe de Antioquia (Antioquia)", "Santa Helena del Opón (Santander)", "Santa Isabel (Tolima)", "Santa Lucía (Atlántico)", "Santa María (Boyacá)", "Santa María (Huila)", "Santa Marta (Magdalena)", "Santa Rosa (Bolívar)", "Santa Rosa (Cauca)", "Santa Rosa de Cabal (Risaralda)", "Santa Rosa de Osos (Antioquia)", "Santa Rosa de Viterbo (Boyacá)", "Santa Rosa del Sur (Bolívar)", "Santa Rosalía (Vichada)", "Santa Sofía (Boyacá)", "Santacruz (Nariño)", "Santana (Boyacá)", "Santander de Quilichao (Cauca)", "Santiago (Norte de Santander)", "Santiago (Putumayo)", "Santo Domingo (Antioquia)", "Santo Domingo de Silos (Norte de Santander)", "Santo Tomás (Atlántico)", "Santuario (Risaralda)", "Sapuyes (Nariño)", "Saravena (Arauca)", "Sardinata (Norte de Santander)", "Sasaima (Cundinamarca)", "Sativanorte (Boyacá)", "Sativasur (Boyacá)", "Segovia (Antioquia)", "Sesquilé (Cundinamarca)", "Sevilla (Valle del Cauca)", "Siachoque (Boyacá)", "Sibaté (Cundinamarca)", "Sibundoy (Putumayo)", "Silvania (Cundinamarca)", "Silvia (Cauca)", "Simacota (Santander)", "Simijaca (Cundinamarca)", "Simití (Bolívar)", "Sincé (Sucre)", "Sincelejo (Sucre)", "Sipí (Chocó)", "Sitionuevo (Magdalena)", "Soacha (Cundinamarca)", "Soatá (Boyacá)", "Socha (Boyacá)", "Socotá (Boyacá)", "Sogamoso (Boyacá)", "Solano (Caquetá)", "Soledad (Atlántico)", "Solita (Caquetá)", "Somondoco (Boyacá)", "Sonsón (Antioquia)", "Sopetrán (Antioquia)", "Soplaviento (Bolívar)", "Sopó (Cundinamarca)", "Sora (Boyacá)", "Soracá (Boyacá)", "Sotaquirá (Boyacá)", "Sotará (Cauca)", "Suaita (Santander)", "Suán (Atlántico)", "Suárez (Cauca)", "Suárez (Tolima)", "Suaza (Huila)", "Subachoque (Cundinamarca)", "Sucre (Cauca)", "Sucre (Santander)", "Sucre (Sucre)", "Suesca (Cundinamarca)", "Supatá (Cundinamarca)", "Supía (Caldas)", "Suratá (Santander)", "Susa (Cundinamarca)", "Susacón (Boyacá)", "Sutamarchán (Boyacá)", "Sutatausa (Cundinamarca)", "Sutatenza (Boyacá)", "Tabio (Cundinamarca)", "Tadó (Chocó)", "Talaigua Nuevo (Bolívar)", "Tamalameque (Cesar)", "Támara (Casanare)", "Tame (Arauca)", "Támesis (Antioquia)", "Taminango (Nariño)", "Tangua (Nariño)", "Taraira (Vaupés)", "Tarapacá (Amazonas)", "Tarazá (Antioquia)", "Tarqui (Huila)", "Tarso (Antioquia)", "Tasco (Boyacá)", "Tauramena (Casanare)", "Tausa (Cundinamarca)", "Tello (Huila)", "Tena (Cundinamarca)", "Tenerife (Magdalena)", "Tenjo (Cundinamarca)", "Tenza (Boyacá)", "Teorama (Norte de Santander)", "Teruel (Huila)", "Tesalia (Huila)", "Tibacuy (Cundinamarca)", "Tibaná (Boyacá)", "Tibasosa (Boyacá)", "Tibirita (Cundinamarca)", "Tibú (Norte de Santander)", "Tierralta (Córdoba)", "Timaná (Huila)", "Timbío (Cauca)", "Timbiquí (Cauca)", "Tinjacá (Boyacá)", "Tipacoque (Boyacá)", "Tiquisio (Bolívar)", "Titiribí (Antioquia)", "Toca (Boyacá)", "Tocaima (Cundinamarca)", "Tocancipá (Cundinamarca)", "Togüí (Boyacá)", "Toledo (Antioquia)", "Toledo (Norte de Santander)", "Tolú (Sucre)", "Tolú Viejo (Sucre)", "Tona (Santander)", "Tópaga (Boyacá)", "Topaipí (Cundinamarca)", "Toribío (Cauca)", "Toro (Valle del Cauca)", "Tota (Boyacá)", "Totoró (Cauca)", "Trinidad (Casanare)", "Trujillo (Valle del Cauca)", "Tubará (Atlántico)", "Tuchín (Córdoba)", "Tuluá (Valle del Cauca)", "Tumaco (Nariño)", "Tunja (Boyacá)", "Tununguá (Boyacá)", "Túquerres (Nariño)", "Turbaco (Bolívar)", "Turbaná (Bolívar)", "Turbo (Antioquia)", "Turmequé (Boyacá)", "Tuta (Boyacá)", "Tutazá (Boyacá)", "Ubalá (Cundinamarca)", "Ubaque (Cundinamarca)", "Ubaté (Cundinamarca)", "Ulloa (Valle del Cauca)", "Úmbita (Boyacá)", "Une (Cundinamarca)", "Unguía (Chocó)", "Unión Panamericana (Chocó)", "Uramita (Antioquia)", "Uribia (La Guajira)", "Urrao (Antioquia)", "Urumita (La Guajira)", "Usiacurí (Atlántico)", "Útica (Cundinamarca)", "Valdivia (Antioquia)", "Valencia (Córdoba)", "Valle de San José (Santander)", "Valle de San Juan (Tolima)", "Valle del Guamuez (Putumayo)", "Valledupar (Cesar)", "Valparaíso (Antioquia)", "Valparaíso (Caquetá)", "Vegachí (Antioquia)", "Vélez (Santander)", "Venadillo (Tolima)", "Venecia (Antioquia)", "Venecia (Cundinamarca)", "Ventaquemada (Boyacá)", "Vergara (Cundinamarca)", "Versalles (Valle del Cauca)", "Vetas (Santander)", "Vianí (Cundinamarca)", "Victoria (Caldas)", "Vigía del Fuerte (Antioquia)", "Vijes (Valle del Cauca)", "Villa Caro (Norte de Santander)", "Villa de Leyva (Boyacá)", "Villa del Rosario (Norte de Santander)", "Villa Rica (Cauca)", "Villagarzón (Putumayo)", "Villagómez (Cundinamarca)", "Villahermosa (Tolima)", "Villamaría (Caldas)", "Villanueva (Bolívar)", "Villanueva (Casanare)", "Villanueva (La Guajira)", "Villanueva (Santander)", "Villapinzón (Cundinamarca)", "Villarrica (Tolima)", "Villavicencio (Meta)", "Villavieja (Huila)", "Villeta (Cundinamarca)", "Viotá (Cundinamarca)", "Viracachá (Boyacá)", "Vista Hermosa (Meta)", "Viterbo (Caldas)", "Yacopí (Cundinamarca)", "Yacuanquer (Nariño)", "Yaguará (Huila)", "Yalí (Antioquia)", "Yarumal (Antioquia)", "Yavaraté (Vaupés)", "Yolombó (Antioquia)", "Yondó (Antioquia)", "Yopal (Casanare)", "Yotoco (Valle del Cauca)", "Yumbo (Valle del Cauca)", "Zambrano (Bolívar)", "Zapatoca (Santander)", "Zapayán (Magdalena)", "Zaragoza (Antioquia)", "Zarzal (Valle del Cauca)", "Zetaquira (Boyacá)", "Zipacón (Cundinamarca)", "Zipaquirá (Cundinamarca)", "Zona Bananera (Magdalena)",
+  ],
+  sectores: [
+    "Agroindustria y agro","Comercio","Construcción e infraestructura","Economía creativa y cultural","Educación",
+    "Manufactura e industria","Salud y bienestar","Servicios financieros","Servicios profesionales","Tecnología y software",
+    "Turismo, hotelería y gastronomía","Transporte y logística","Otro",
+  ],
+  categorias: [
+    "Recursos no reembolsables","Convocatorias empresariales","Formación gratuita","Acceso a crédito",
+    "Innovación y productividad","Transformación digital e IA","Internacionalización","Sostenibilidad","Cooperación internacional",
+  ],
+  render(){
+    const opt = arr => arr.map(v=>`<option>${v}</option>`).join('');
+    document.getElementById('r-ciudad').innerHTML = '<option value="">Seleccione…</option>' + opt(this.ciudades);
+    document.getElementById('r-camara').innerHTML = '<option value="">Seleccione…</option>' + opt(this.camaras);
+    document.getElementById('r-caja').innerHTML = '<option value="">No aplica / no sabe</option>' + opt(this.cajas);
+    document.getElementById('r-sector').innerHTML = '<option value="">Seleccione…</option>' + opt(this.sectores);
+    document.getElementById('r-apoyo').innerHTML = '<option value="">Todas las categorías</option>' + opt(this.categorias);
+  },
+  buildPrompt(){
+    const g = id => (document.getElementById(id).value || '').trim();
+    const empresa = g('r-empresa') || 'la empresa';
+    const ciudad = g('r-ciudad') || 'su ciudad';
+    const camara = g('r-camara');
+    const sector = g('r-sector');
+    const caja = g('r-caja');
+    const tamano = g('r-tamano');
+    const apoyo = g('r-apoyo');
+    const fechaHoy = new Intl.DateTimeFormat('es-CO', {day:'numeric', month:'long', year:'numeric'}).format(new Date());
+
+    // Orden de búsqueda: si hay Cámara/Caja seleccionadas, sus programas propios
+    // se revisan ANTES que las fuentes genéricas — es la fuente más específica
+    // para esta empresa en particular.
+    const pasosFuentes = [];
+    if(camara){
+      pasosFuentes.push(`Busca primero en el sitio web oficial y los canales (redes sociales, boletines, noticias recientes) de la ${camara} qué programas, rutas de atención, ferias, capacitaciones, fondos o convocatorias PROPIAS tiene vigentes para empresas de su jurisdicción. Esta es la fuente más específica para esta empresa y debe revisarse antes que cualquier otra.`);
+    }
+    pasosFuentes.push(`Revisa el portal oficial Innovamos (https://www.innovamos.gov.co) — la plataforma del Gobierno de Colombia que centraliza convocatorias vigentes de múltiples entidades (INNPULSA, MinCIT, ICETEX, Bancóldex, universidades y más), cargadas y verificadas manualmente por el Gobierno, filtrables por tipo de beneficio y tipo de empresa.`);
+    if(caja){
+      pasosFuentes.push(`Busca en el sitio oficial de la caja de compensación ${caja} qué programas propios de formación, crédito, bienestar empresarial o apoyo a MiPymes tiene vigentes.`);
+    }
+    pasosFuentes.push(`Complementa con búsqueda web adicional en: otras cámaras de comercio y cajas de compensación, iNNpulsa, SENA, Fondo Emprender, Bancóldex, ProColombia, Ministerio TIC, MinCIT, MinTrabajo, gobernaciones, alcaldías, secretarías regionales, clústeres, gremios, centros de desarrollo empresarial, BID, CAF, Banco Mundial, PNUD, Unión Europea, USAID, GIZ, Swisscontact y entidades relevantes según el sector.`);
+    const fuentesTxt = pasosFuentes.map((p,i)=>`${i+1}. ${p}`).join('\n\n');
+
+    return `Actúa como un consultor experto en desarrollo empresarial en Colombia, con conocimiento profundo y actualizado de la oferta pública y privada de apoyo a empresas. Realiza una búsqueda web EXHAUSTIVA y PROFUNDA — no te limites a 2 o 3 ejemplos genéricos, quiero un inventario lo más completo posible de la oferta VIGENTE hoy.
+
+1. FECHA DE REFERENCIA
+Hoy es ${fechaHoy}. Toda oportunidad que incluyas debe estar abierta o disponible en esta fecha. Verifica la fecha de cierre de cada una antes de incluirla; si ya venció, descártala. Si no encuentras la fecha de cierre, dilo explícitamente en la columna correspondiente en vez de asumir que sigue vigente.
+
+2. PERFIL DE LA EMPRESA
+- Empresa: ${empresa}
+- Sector económico: ${sector || 'no especificado'}
+- Ciudad/región: ${ciudad}
+- Cámara de Comercio: ${camara || 'no especificada'}
+- Caja de compensación afiliada: ${caja || 'no especificada'}
+- Tamaño empresarial: ${tamano || 'no especificado'}
+- Tipo de apoyo priorizado: ${apoyo || 'todas las categorías'}
+
+3. QUÉ BUSCAR
+Convocatorias, programas, cofinanciación, recursos no reembolsables, transformación digital, inteligencia artificial, innovación, productividad, sostenibilidad, internacionalización o escalamiento empresarial relevantes para esta empresa, cubriendo las nueve categorías: recursos no reembolsables, convocatorias empresariales, formación gratuita, acceso a crédito, innovación y productividad, transformación digital e IA, internacionalización, sostenibilidad y cooperación internacional.
+
+4. ORDEN DE BÚSQUEDA DE FUENTES (sigue este orden exacto)
+${fuentesTxt}
+
+5. CRITERIOS DE INCLUSIÓN
+- El sector económico ingresado es la variable principal; no asumas turismo, tecnología, agro, startup o microempresa si no fue indicado.
+- Solo incluye oportunidades vigentes a la fecha de hoy (${fechaHoy}) — descarta cualquier convocatoria cerrada, vencida o sin fecha de apertura futura confirmada.
+- Prioriza oportunidades verificables, oficiales y accionables, con ruta clara de acceso.
+- Prioriza Colombia y oportunidades aplicables desde Colombia; incluye también las nacionales, regionales, locales, sectoriales y de cooperación internacional cuando apliquen.
+- Descarta oportunidades genéricas, cerradas, irrelevantes o sin ruta clara de acceso.
+- No inventes enlaces ni fechas de vigencia.
+
+6. FORMATO DE RESPUESTA OBLIGATORIO
+La respuesta final debe contener únicamente estas dos secciones:
+
+RESUMEN INICIAL DE LA EMPRESA
+Máximo 2 párrafos ejecutivos conectando sector, ubicación, tamaño, tipo de apoyo, caja de compensación y tipo de oportunidades que más le convienen.
+
+TABLA DE CONVOCATORIAS Y PROGRAMAS RELEVANTES
+Preséntala como una tabla en formato markdown (no la reemplaces por una lista de viñetas) con estas columnas exactas:
+1. Nombre de la convocatoria o programa
+2. Entidad responsable
+3. Tipo de apoyo
+4. Beneficio principal
+5. Empresas elegibles
+6. Cobertura geográfica
+7. Estado de vigencia
+8. Fecha límite
+9. Requisitos clave
+10. Nivel de ajuste con la empresa, de 1 a 10
+11. Link oficial
+
+7. NO INCLUIR
+- Riesgos
+- Próximos pasos
+- Planes de acción
+- Recomendaciones genéricas
+- Explicación metodológica
+- Conclusión genérica`;
+  },
+  generate(){
+    const out = document.getElementById('radar-prompt-out');
+    out.style.display = 'block';
+    document.getElementById('radar-prompt-ta').value = this.buildPrompt();
+    if(typeof out.scrollIntoView === 'function') out.scrollIntoView({behavior:'smooth', block:'nearest'});
+  },
+  copy(){
+    const ta = document.getElementById('radar-prompt-ta');
+    ta.select(); ta.setSelectionRange(0, 99999);
+    try{ navigator.clipboard.writeText(ta.value); }catch(e){ document.execCommand('copy'); }
+    toast('Prompt copiado al portapapeles');
+  },
+  clear(){
+    if (!confirm('Esto borrará todos los datos del formulario del Radar IA. ¿Continuar?')) return;
+    ['r-empresa','r-ciudad','r-camara','r-caja','r-sector','r-tamano','r-apoyo'].forEach(id=>{
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('radar-prompt-out').style.display = 'none';
+    document.getElementById('radar-prompt-ta').value = '';
+    toast('Datos del Radar IA reiniciados');
+  },
+  init(){ this.render(); }
+};
+
+radar.init();
+</script>
+</body>
+</html>
